@@ -1,0 +1,98 @@
+services:
+  - type: keyvalue
+    name: auto-parts-crm-redis
+    region: oregon
+    plan: free
+    maxmemoryPolicy: noeviction
+    ipAllowList: []
+
+  - type: web
+    name: auto-parts-crm-api
+    runtime: node
+    rootDir: backend
+    region: oregon
+    plan: free
+    buildCommand: 'npm ci && npx prisma generate && DATABASE_URL="$DIRECT_URL" npx prisma migrate deploy && npm run build'
+    startCommand: 'npm run start:prod'
+    healthCheckPath: /
+    autoDeployTrigger: commit
+    envVars:
+      - key: NODE_ENV
+        value: "production"
+      - key: NODE_VERSION
+        value: "20"
+      - key: DATABASE_URL
+        sync: false
+      - key: DIRECT_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN_SECONDS
+        value: "86400"
+      - key: REDIS_HOST
+        fromService:
+          type: keyvalue
+          name: auto-parts-crm-redis
+          property: host
+      - key: REDIS_PORT
+        fromService:
+          type: keyvalue
+          name: auto-parts-crm-redis
+          property: port
+      - key: REDIS_USERNAME
+        value: ""
+      - key: REDIS_PASSWORD
+        value: ""
+      - key: REDIS_DB
+        value: "0"
+      - key: REDIS_CACHE_ENABLED
+        value: "true"
+      - key: REDIS_CACHE_KEY_PREFIX
+        value: "auto-parts-crm:cache:"
+      - key: REDIS_TLS_ENABLED
+        value: "false"
+      - key: REDIS_CONNECT_TIMEOUT_MS
+        value: "5000"
+      - key: ORDERS_CACHE_TTL_SECONDS
+        value: "60"
+      - key: BULLMQ_PREFIX
+        value: "auto-parts-crm"
+
+# Optional paid worker for BullMQ processing. Enable on a paid Render plan if
+# lifecycle jobs become business-critical instead of log-only.
+#  - type: worker
+#    name: auto-parts-crm-worker
+#    runtime: node
+#    rootDir: backend
+#    region: oregon
+#    plan: starter
+#    buildCommand: 'npm ci && npx prisma generate && npm run build'
+#    startCommand: 'npm run start:worker'
+#    autoDeployTrigger: commit
+#    envVars:
+#      - key: NODE_ENV
+#        value: "production"
+#      - key: NODE_VERSION
+#        value: "20"
+#      - key: REDIS_HOST
+#        fromService:
+#          type: keyvalue
+#          name: auto-parts-crm-redis
+#          property: host
+#      - key: REDIS_PORT
+#        fromService:
+#          type: keyvalue
+#          name: auto-parts-crm-redis
+#          property: port
+#      - key: REDIS_USERNAME
+#        value: ""
+#      - key: REDIS_PASSWORD
+#        value: ""
+#      - key: REDIS_DB
+#        value: "0"
+#      - key: REDIS_TLS_ENABLED
+#        value: "false"
+#      - key: REDIS_CONNECT_TIMEOUT_MS
+#        value: "5000"
+#      - key: BULLMQ_PREFIX
+#        value: "auto-parts-crm"

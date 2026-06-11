@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build files
+.next/
+dist/
+**/.next/
+**/dist/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+*.out.log
+*.err.log
+*.stdout.log
+*.stderr.log
+*.pid
+
+# Redis
+dump.rdb
+redis/
+
+# OS
+.DS_Store
+Thumbs.db
