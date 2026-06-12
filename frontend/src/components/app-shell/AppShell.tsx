@@ -9,7 +9,7 @@ import {
   APP_SIDEBAR_COLLAPSED_WIDTH,
   APP_SIDEBAR_WIDTH,
 } from './shell.constants';
-import { getNavigationForRole } from '@/features/auth/lib/permissions';
+import { getNavigationForRole } from '@/lib/config/navigation';
 import type { AuthUser } from '@/features/auth/types/auth.types';
 import { matchNavigationItem } from '@/lib/config/navigation';
 
