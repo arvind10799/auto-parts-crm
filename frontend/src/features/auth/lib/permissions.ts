@@ -1,12 +1,11 @@
 import {
-  matchNavigationItem,
-  navigationConfig,
-  type NavigationItemConfig,
-} from '@/lib/config/navigation';
+  matchRoute,
+  navigationRoutes,
+} from '@/lib/config/navigation-routes';
 import type { UserRole } from '../types/auth.types';
 
 export function getDefaultRouteForRole(role: UserRole): string {
-  const matchedRoute = navigationConfig.find((route) =>
+  const matchedRoute = navigationRoutes.find((route) =>
     route.defaultFor?.includes(role),
   );
 
@@ -14,7 +13,7 @@ export function getDefaultRouteForRole(role: UserRole): string {
 }
 
 export function hasRouteAccess(pathname: string, role: UserRole): boolean {
-  const matchedRoute = matchNavigationItem(pathname);
+  const matchedRoute = matchRoute(pathname);
 
   if (!matchedRoute) {
     return true;
@@ -23,12 +22,8 @@ export function hasRouteAccess(pathname: string, role: UserRole): boolean {
   return matchedRoute.roles.includes(role);
 }
 
-export function getNavigationForRole(role: UserRole): NavigationItemConfig[] {
-  return navigationConfig.filter((item) => item.roles.includes(role));
-}
-
 export function isProtectedPath(pathname: string): boolean {
-  return matchNavigationItem(pathname) !== null;
+  return matchRoute(pathname) !== null;
 }
 
 export function resolveAuthorizedRedirectPath(

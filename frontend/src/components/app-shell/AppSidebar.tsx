@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils/cn';
-import { getNavigationForRole } from '@/features/auth/lib/permissions';
+import { getNavigationForRole } from '@/lib/config/navigation';
 import { roleLabels } from '@/features/auth/lib/roles';
 import type { UserRole } from '@/features/auth/types/auth.types';
 import {
